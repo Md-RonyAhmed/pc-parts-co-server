@@ -43,7 +43,7 @@ const client = new MongoClient(uri, {
 
     app.get("/blogs", async (req, res) => {
       const query = {};
-      const blogs = await productCollection.find(query).toArray();
+      const blogs = await blogsCollection.find(query).toArray();
       if (!blogs?.length) {
         return res.send({ success: false, error: "No blog found" });
       }
