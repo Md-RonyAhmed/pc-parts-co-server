@@ -53,16 +53,26 @@ const client = new MongoClient(uri, {
       await blogsCollection.insertOne(blog);
       res.send({
         success: true,
-        message: `Successfully inserted`,
+        message: `Successfully inserted ${blog.name}`,
       });
     });
-
-    app.get("/blogs",verifyJWT, async (req, res) => {
+ //get all blog
+    app.get("/blogs",async (req, res) => {
       const query = {};
       const blogs = await blogsCollection.find(query).toArray();
       if (!blogs?.length) {
         return res.send({ success: false, error: "No blog found" });
       }
+      res.send({
+        success: true,
+        data: blogs,
+      });
+    });
+    // get single blog
+    app.get("/blogs/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id)};
+      const blogs = await blogsCollection.find(query).toArray();
       res.send({
         success: true,
         data: blogs,
