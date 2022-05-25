@@ -26,9 +26,25 @@ const client = new MongoClient(uri, {
 });
 
 (async () => {
-  await client.connect();
-  const productCollection = client.db("pc-partsDb").collection("pc-parts");
-  console.log('DB connected');
+  try {
+    await client.connect();
+    const blogsCollection = client.db("partsDb").collection("blogs");
+    console.log("DB connected");
+
+    // post data to DB
+    app.post("/blogs", async (req, res) => {
+      const blog = req.body;
+      await blogsCollection.insertOne(blog);
+      res.send({
+        success: true,
+        message: `Successfully inserted`,
+      });
+    });
+  } catch (error) {
+    
+    console.log(error);
+    
+  }
 })().catch(console.dir);
 
 app.get('/', (req, res) => {
