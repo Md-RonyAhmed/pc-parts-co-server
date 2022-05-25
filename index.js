@@ -1,4 +1,4 @@
-const express = require('express');
+const express = require("express");
 const cors = require("cors");
 const jwt = require("jsonwebtoken");
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
@@ -40,16 +40,26 @@ const client = new MongoClient(uri, {
         message: `Successfully inserted`,
       });
     });
+
+    app.get("/blogs", async (req, res) => {
+      const query = {};
+      const blogs = await productCollection.find(query).toArray();
+      if (!blogs?.length) {
+        return res.send({ success: false, error: "No blog found" });
+      }
+      res.send({
+        success: true,
+        data: blogs,
+      });
+    });
   } catch (error) {
-    
     console.log(error);
-    
   }
 })().catch(console.dir);
 
-app.get('/', (req, res) => {
+app.get("/", (req, res) => {
   res.send("Welcome to PC parts Co. Manufacturers Ltd.");
-})
+});
 
 app.listen(port, () => {
   console.log(`PC parts co. server running on port: ${port}`);
