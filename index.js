@@ -114,10 +114,10 @@ const client = new MongoClient(uri, {
       });
     });
 
-    //get all parts
+    //get limited parts
     app.get("/parts", async (req, res) => {
-      const query = {};
-      const parts = await (await partsCollection.find(query).toArray())
+      const limit = Number(req.query.limit);
+      const parts = await partsCollection.find().limit(limit).toArray();
       if (!parts?.length) {
         return res.send({ success: false, error: "No parts found" });
       }
@@ -126,8 +126,18 @@ const client = new MongoClient(uri, {
         data: parts,
       });
     });
-
-
+    //get all parts
+    app.get("/parts", async (req, res) => {
+      const query = {};
+      const parts = await await partsCollection.find(query).toArray();
+      if (!parts?.length) {
+        return res.send({ success: false, error: "No parts found" });
+      }
+      res.send({
+        success: true,
+        data: parts,
+      });
+    });
   } catch (error) {
     console.log(error);
   }
