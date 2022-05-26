@@ -19,7 +19,7 @@ app.use(express.json());
 function verifyJWT(req, res, next) {
   const authHeader = req.headers.authorization;
   if (!authHeader) {
-    return res.status(401).send({ message: "UnAuthorized access" });
+    return res.status(401).send({ message: "Unauthorized access" });
   }
   const token = authHeader.split(" ")[1];
   jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, function (err, decoded) {
@@ -45,6 +45,7 @@ const client = new MongoClient(uri, {
   try {
     await client.connect();
     const blogsCollection = client.db("partsDb").collection("blogs");
+    const userCollection = client.db("partsDb").collection("users");
     console.log("DB connected");
 
     // post data to DB
@@ -78,6 +79,14 @@ const client = new MongoClient(uri, {
         data: blogs,
       });
     });
+
+   //get users
+    app.get("/user", verifyJWT, async (req, res) => {
+      const users = await userCollection.find().toArray();
+      res.send(users);
+    });
+
+
   } catch (error) {
     console.log(error);
   }
