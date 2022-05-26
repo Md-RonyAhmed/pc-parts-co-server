@@ -58,8 +58,8 @@ const client = new MongoClient(uri, {
         message: `Successfully inserted ${blog.name}`,
       });
     });
- //get all blog
-    app.get("/blogs",async (req, res) => {
+    //get all blog
+    app.get("/blogs", async (req, res) => {
       const query = {};
       const blogs = await blogsCollection.find(query).toArray();
       if (!blogs?.length) {
@@ -73,7 +73,7 @@ const client = new MongoClient(uri, {
     // get single blog
     app.get("/blogs/:id", async (req, res) => {
       const id = req.params.id;
-      const query = { _id: ObjectId(id)};
+      const query = { _id: ObjectId(id) };
       const blogs = await blogsCollection.find(query).toArray();
       res.send({
         success: true,
@@ -81,7 +81,7 @@ const client = new MongoClient(uri, {
       });
     });
 
-   //get users
+    //get users
     app.get("/user", verifyJWT, async (req, res) => {
       const users = await userCollection.find().toArray();
       res.send(users);
@@ -111,6 +111,19 @@ const client = new MongoClient(uri, {
       res.send({
         success: true,
         message: `Successfully inserted ${parts.name}`,
+      });
+    });
+
+    //get all parts
+    app.get("/parts", async (req, res) => {
+      const query = {};
+      const parts = await partsCollection.find(query).toArray();
+      if (!parts?.length) {
+        return res.send({ success: false, error: "No parts found" });
+      }
+      res.send({
+        success: true,
+        data: parts,
       });
     });
 
