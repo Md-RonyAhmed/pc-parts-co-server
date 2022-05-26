@@ -117,7 +117,7 @@ const client = new MongoClient(uri, {
     //get all parts
     app.get("/parts", async (req, res) => {
       const query = {};
-      const parts = await partsCollection.find(query).toArray();
+      const parts = await (await partsCollection.find(query).toArray())
       if (!parts?.length) {
         return res.send({ success: false, error: "No parts found" });
       }
