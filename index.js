@@ -47,6 +47,7 @@ const client = new MongoClient(uri, {
     const blogsCollection = client.db("partsDb").collection("blogs");
     const userCollection = client.db("partsDb").collection("users");
     const partsCollection = client.db("partsDb").collection("parts");
+    const ordersCollection = client.db("partsDb").collection("orders");
     console.log("DB connected");
 
     // post data to DB
@@ -153,6 +154,16 @@ const client = new MongoClient(uri, {
       res.send({
         success: true,
         data: parts,
+      });
+    });
+
+    //post place orders
+    app.post("/orders", async (req, res) => {
+      const orders = req.body;
+      await ordersCollection.insertOne(orders);
+      res.send({
+        success: true,
+        message: `Successfully Place Order`,
       });
     });
 
