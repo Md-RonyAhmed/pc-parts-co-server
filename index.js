@@ -110,14 +110,14 @@ const client = new MongoClient(uri, {
       await partsCollection.insertOne(parts);
       res.send({
         success: true,
-        message: `Successfully inserted ${parts.name}`,
+        message: `Successfully inserted`,
       });
     });
 
     //get limited parts
     app.get("/parts", async (req, res) => {
       const limit = Number(req.query.limit);
-      const parts = await partsCollection.find().limit(limit).toArray();
+      const parts = await partsCollection.find().sort({$natural:-1}).limit(limit).toArray();
       if (!parts?.length) {
         return res.send({ success: false, error: "No parts found" });
       }
