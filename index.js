@@ -185,16 +185,7 @@ const client = new MongoClient(uri, {
       
     });
     
-    //  app.get("/booking", verifyJWT, async (req, res) => {
-    //    const patient = req.query.patient;
-       
-    //    if (patient === decodedEmail) {
-    //      const query = { patient: patient };
-    //      const bookings = await bookingCollection.find(query).toArray();
-    //      return res.send(bookings);
-    //    } 
-    //  });
-
+    
 
 
   } catch (error) {
