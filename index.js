@@ -48,6 +48,7 @@ const client = new MongoClient(uri, {
     const userCollection = client.db("partsDb").collection("users");
     const partsCollection = client.db("partsDb").collection("parts");
     const ordersCollection = client.db("partsDb").collection("orders");
+    const profileCollection = client.db("partsDb").collection("userProfile");
     console.log("DB connected");
 
     // post data to DB
@@ -147,7 +148,7 @@ const client = new MongoClient(uri, {
     //get parts with id
     app.get("/parts/:id", async (req, res) => {
       const id = req.params.id;
-      const query = { _id: ObjectId(id)};
+      const query = { _id: ObjectId(id) };
       const cursor = partsCollection.find(query);
       const parts = await cursor.toArray();
       // res.send(result);
@@ -158,16 +159,16 @@ const client = new MongoClient(uri, {
     });
 
     //post place orders
-       app.post("/order", async (req, res) => {
-         const orders = req.body;
-         await ordersCollection.insertOne(orders);
-        
-         res.send({
-           success: true,
-           message:"Order placed Successfully"
-         });
-       });
-    
+    app.post("/order", async (req, res) => {
+      const orders = req.body;
+      await ordersCollection.insertOne(orders);
+
+      res.send({
+        success: true,
+        message: "Order placed Successfully",
+      });
+    });
+
     //get orders with email
     app.get("/orders", verifyJWT, async (req, res) => {
       const email = req.query.email;
@@ -179,14 +180,27 @@ const client = new MongoClient(uri, {
           success: true,
           data: orders,
         });
-      }else {
-         return res.status(403).send({ message: "forbidden access" });
-       }
-      
+      } else {
+        return res.status(403).send({ message: "forbidden access" });
+      }
     });
-    
-    
 
+    //update user profile 
+      app.put("/userProfile/:email", async (req, res) => {
+        const email = req.params.email;
+        const user = req.body;
+        const filter = { email: email };
+        const options = { upsert: true };
+        const updateDoc = {
+          $set: user,
+        };
+        await profileCollection.updateOne(filter, updateDoc, options);
+        res.send({
+          success: true,
+          message: "Profile Updated Successfully",
+        });
+      });
+          
 
   } catch (error) {
     console.log(error);
