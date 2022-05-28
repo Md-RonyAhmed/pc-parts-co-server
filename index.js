@@ -227,6 +227,24 @@ const client = new MongoClient(uri, {
         message: `Successfully inserted Reviews`,
       });
     });
+
+    //get all reviews
+    app.get("/reviews", async (req, res) => {
+      const query = {};
+      const reviews = await reviewsCollection
+        .find(query)
+        .sort({ $natural: -1 })
+        .toArray();
+      if (!reviews?.length) {
+        return res.send({ success: false, error: "No reviews found" });
+      }
+      res.send({
+        success: true,
+        data: reviews,
+      });
+    });
+
+
   } catch (error) {
     console.log(error);
   }
