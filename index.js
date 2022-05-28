@@ -49,6 +49,7 @@ const client = new MongoClient(uri, {
     const partsCollection = client.db("partsDb").collection("parts");
     const ordersCollection = client.db("partsDb").collection("orders");
     const profileCollection = client.db("partsDb").collection("userProfile");
+    const reviewsCollection = client.db("partsDb").collection("reviews");
     console.log("DB connected");
 
     // post data to DB
@@ -186,20 +187,20 @@ const client = new MongoClient(uri, {
     });
 
     //get all orders
-   app.get("/order", verifyJWT, async (req, res) => {
-     const email = req.query.email;
-     const decodedEmail = req.decoded.email;
-     if (email === decodedEmail) {
-       const query = {};
-       const orders = await ordersCollection.find(query).toArray();
-       res.send({
-         success: true,
-         data: orders,
-       });
-     } else {
-       return res.status(403).send({ message: "forbidden access" });
-     }
-   });
+    app.get("/order", verifyJWT, async (req, res) => {
+      const email = req.query.email;
+      const decodedEmail = req.decoded.email;
+      if (email === decodedEmail) {
+        const query = {};
+        const orders = await ordersCollection.find(query).toArray();
+        res.send({
+          success: true,
+          data: orders,
+        });
+      } else {
+        return res.status(403).send({ message: "forbidden access" });
+      }
+    });
 
     //update user profile
     app.put("/userProfile/:email", async (req, res) => {
@@ -214,6 +215,16 @@ const client = new MongoClient(uri, {
       res.send({
         success: true,
         message: "Profile Updated Successfully",
+      });
+    });
+
+    // post review to DB
+    app.post("/reviews", async (req, res) => {
+      const review = req.body;
+      await reviewsCollection.insertOne(review);
+      res.send({
+        success: true,
+        message: `Successfully inserted Reviews`,
       });
     });
   } catch (error) {
