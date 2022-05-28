@@ -158,14 +158,17 @@ const client = new MongoClient(uri, {
     });
 
     //post place orders
-    app.post("/orders", async (req, res) => {
-      const orders = req.body;
-      await ordersCollection.insertOne(orders);
-      res.send({
-        success: true,
-        message: `Successfully Place Order`,
-      });
-    });
+       app.post("/order", async (req, res) => {
+         const orders = req.body;
+         await ordersCollection.insertOne(orders);
+        
+         res.send({
+           success: true,
+           message:"Order placed Successfully"
+         });
+       });
+
+
 
   } catch (error) {
     console.log(error);
