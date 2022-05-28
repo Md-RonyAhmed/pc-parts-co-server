@@ -108,6 +108,7 @@ const client = new MongoClient(uri, {
        res.send({ admin: isAdmin });
      });
 
+    
      app.put("/user/admin/:email", verifyJWT,verifyAdmin, async (req, res) => {
        const email = req.params.email;
        const filter = { email: email };
