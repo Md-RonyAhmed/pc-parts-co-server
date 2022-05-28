@@ -167,6 +167,18 @@ const client = new MongoClient(uri, {
            message:"Order placed Successfully"
          });
        });
+    
+    //get orders with email
+    app.get("/orders", async (req, res) => {
+      const email = req.query.email;
+      const query = { email: email };
+      const orders = await ordersCollection.find(query).toArray();
+      res.send({
+        success: true,
+        data: orders,
+      });
+    });
+    
 
 
 
