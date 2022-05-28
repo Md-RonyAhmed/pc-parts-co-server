@@ -172,7 +172,7 @@ const client = new MongoClient(uri, {
     app.get("/orders", verifyJWT, async (req, res) => {
       const email = req.query.email;
       const decodedEmail = req.decoded.email;
-      if (patient === decodedEmail) {
+      if (email === decodedEmail) {
         const query = { email: email };
         const orders = await ordersCollection.find(query).toArray();
         res.send({
