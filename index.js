@@ -185,23 +185,37 @@ const client = new MongoClient(uri, {
       }
     });
 
-    //update user profile 
-      app.put("/userProfile/:email", async (req, res) => {
-        const email = req.params.email;
-        const user = req.body;
-        const filter = { email: email };
-        const options = { upsert: true };
-        const updateDoc = {
-          $set: user,
-        };
-        await profileCollection.updateOne(filter, updateDoc, options);
-        res.send({
-          success: true,
-          message: "Profile Updated Successfully",
-        });
-      });
-          
+    //get all orders
+   app.get("/order", verifyJWT, async (req, res) => {
+     const email = req.query.email;
+     const decodedEmail = req.decoded.email;
+     if (email === decodedEmail) {
+       const query = {};
+       const orders = await ordersCollection.find(query).toArray();
+       res.send({
+         success: true,
+         data: orders,
+       });
+     } else {
+       return res.status(403).send({ message: "forbidden access" });
+     }
+   });
 
+    //update user profile
+    app.put("/userProfile/:email", async (req, res) => {
+      const email = req.params.email;
+      const user = req.body;
+      const filter = { email: email };
+      const options = { upsert: true };
+      const updateDoc = {
+        $set: user,
+      };
+      await profileCollection.updateOne(filter, updateDoc, options);
+      res.send({
+        success: true,
+        message: "Profile Updated Successfully",
+      });
+    });
   } catch (error) {
     console.log(error);
   }
