@@ -169,16 +169,31 @@ const client = new MongoClient(uri, {
        });
     
     //get orders with email
-    app.get("/orders", async (req, res) => {
+    app.get("/orders", verifyJWT, async (req, res) => {
       const email = req.query.email;
-      const query = { email: email };
-      const orders = await ordersCollection.find(query).toArray();
-      res.send({
-        success: true,
-        data: orders,
-      });
+      const decodedEmail = req.decoded.email;
+      if (patient === decodedEmail) {
+        const query = { email: email };
+        const orders = await ordersCollection.find(query).toArray();
+        res.send({
+          success: true,
+          data: orders,
+        });
+      }else {
+         return res.status(403).send({ message: "forbidden access" });
+       }
+      
     });
     
+    //  app.get("/booking", verifyJWT, async (req, res) => {
+    //    const patient = req.query.patient;
+       
+    //    if (patient === decodedEmail) {
+    //      const query = { patient: patient };
+    //      const bookings = await bookingCollection.find(query).toArray();
+    //      return res.send(bookings);
+    //    } 
+    //  });
 
 
 
