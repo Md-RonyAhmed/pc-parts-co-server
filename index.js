@@ -64,7 +64,7 @@ const client = new MongoClient(uri, {
       }
     };
     // post data to DB
-    app.post("/blogs", async (req, res) => {
+    app.post("/blog", async (req, res) => {
       const blog = req.body;
       await blogsCollection.insertOne(blog);
       res.send({
